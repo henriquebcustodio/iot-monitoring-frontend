@@ -1,6 +1,6 @@
 import create from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { attachAuthorizationHeader } from '../../src/services/api';
+import { attachAuthorizationHeader } from '../../services/api';
 
 interface AuthState {
   isAuthenticated: boolean;

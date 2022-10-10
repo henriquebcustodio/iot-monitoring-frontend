@@ -1,5 +1,5 @@
 import api from '../api';
-import useAuthStore from '../../../store/auth/useAuthStore';
+import useAuthStore from '../../store/auth/useAuthStore';
 
 interface ReqInput {
   email: string,
