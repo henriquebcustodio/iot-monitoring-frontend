@@ -17,7 +17,10 @@ const useAuthStore = create<AuthState>(set => ({
     window.localStorage.setItem('token', token);
     return { token, isAuthenticated: true };
   }),
-  removeToken: () => set(() => ({ token: '', isAuthenticated: false }))
+  removeToken: () => set(() => {
+    window.localStorage.removeItem('token');
+    return { token: '', isAuthenticated: false };
+  })
 }));
 
 mountStoreDevtool('auth', useAuthStore);
