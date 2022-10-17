@@ -15,7 +15,7 @@ import { useQuery } from 'react-query';
 import { DevicesService } from '../../services';
 import DeviceCard from '../../components/DeviceCard';
 import { useState } from 'react';
-import CreateDeviceForm from '../../components/CreateDeviceForm/CreateDeviceForm';
+import CreateDeviceForm from '../../components/CreateDeviceForm';
 
 const Devices = () => {
   const { classes } = useStyles();
