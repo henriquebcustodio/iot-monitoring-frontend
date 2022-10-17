@@ -1,5 +1,4 @@
 import {
-  Container,
   SimpleGrid,
   Title,
   Center,
@@ -10,22 +9,20 @@ import {
   ActionIcon, Group
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons';
-import useStyles from './styles';
 import { useQuery } from 'react-query';
 import { DevicesService } from '../../services';
 import DeviceCard from '../../components/DeviceCard';
 import { useState } from 'react';
 import CreateDeviceForm from '../../components/CreateDeviceForm';
+import PageContainer from '../../components/PageContainer';
 
 const Devices = () => {
-  const { classes } = useStyles();
-
   const { data: devices } = useQuery('listDevices', DevicesService.list);
 
   const [isCreationOpen, setIsCreationOpen] = useState(false);
 
   return (
-    <Container className={classes.container}>
+    <PageContainer>
       <Modal
         title='New device'
         centered={true}
@@ -34,7 +31,7 @@ const Devices = () => {
       </Modal>
 
       <Group mb='3rem'>
-        <Title className={classes.title} order={2} mb={0}>
+        <Title order={2} mb={0}>
           Devices
         </Title>
         <ActionIcon
@@ -73,7 +70,7 @@ const Devices = () => {
           />
         ))}
       </SimpleGrid>
-    </Container>
+    </PageContainer>
   );
 };
 

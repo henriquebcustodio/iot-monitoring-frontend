@@ -13,10 +13,6 @@ const useStyles = createStyles((theme) => ({
     boxSizing: 'border-box',
     color: theme.colors.gray[7]
   },
-
-  title: {
-    marginBottom: '2rem'
-  }
 }));
 
 export default useStyles;
