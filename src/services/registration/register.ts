@@ -10,8 +10,8 @@ interface ReqInput {
 interface ReqResponse {
   user: {
     id: number;
-    created_at: string;
-    updated_at: string;
+    createdAt: string;
+    updatedAt: string;
     email: string;
     token: string;
   }
@@ -22,7 +22,7 @@ const register = async ({ email, password, passwordConfirmation }: ReqInput) => 
     user: {
       email,
       password,
-      password_confirmation: passwordConfirmation
+      passwordConfirmation
     },
   });
 
