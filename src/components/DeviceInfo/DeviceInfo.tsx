@@ -4,10 +4,11 @@ import useStyles from './styles';
 import CopyToClipboard from './CopyToClipboard';
 import DeleteModal from './DeleteModal';
 import { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { DevicesService } from '../../services';
 import { useLocation } from 'wouter';
 import Device from '../../services/devices/Device';
+import EditModal from './EditModal';
 
 interface DeviceInfoProps {
   device: Device;
@@ -19,6 +20,9 @@ const DeviceInfo = ({ device }: DeviceInfoProps) => {
   const [, setLocation] = useLocation();
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const { mutate: deleteDevice } = useMutation(
     'deleteDevice',
@@ -29,9 +33,23 @@ const DeviceInfo = ({ device }: DeviceInfoProps) => {
       }
     });
 
+  const { mutate: editDevice } = useMutation(
+    'editDevice',
+    DevicesService.edit,
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries('showDevice');
+      }
+    });
+
   const handleOnDelete = async () => {
     setIsDeleteModalOpen(false);
     await deleteDevice();
+  };
+
+  const handleOnEdit = async (name: string, description: string) => {
+    setIsEditModalOpen(false);
+    await editDevice({ id: device.id, description, name });
   };
 
   return (
@@ -42,8 +60,15 @@ const DeviceInfo = ({ device }: DeviceInfoProps) => {
         onDelete={() => handleOnDelete()}
       />
 
-      <Group mb='1rem' position='apart'>
-        <Title order={3} weight='500'>{device.name}</Title>
+      <EditModal
+        isOpen={isEditModalOpen}
+        device={device}
+        onClose={() => setIsEditModalOpen(false)}
+        onEdit={handleOnEdit}
+      />
+
+      <Group mb='1rem' position='apart' spacing='xs'>
+        <Title order={3} weight='500' className={classes.name}>{device.name}</Title>
         <Menu shadow='md'>
           <Menu.Target>
             <ActionIcon>
@@ -52,7 +77,12 @@ const DeviceInfo = ({ device }: DeviceInfoProps) => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item icon={<IconPencil size={14} />}>Edit</Menu.Item>
+            <Menu.Item
+              icon={<IconPencil size={14} />}
+              onClick={() => setIsEditModalOpen(true)}
+            >
+              Edit
+            </Menu.Item>
             <Menu.Item
               color='red'
               icon={<IconTrash size={14} />}

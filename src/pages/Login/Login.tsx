@@ -9,7 +9,7 @@ const Login = () => {
       <Title align="center">Welcome back!</Title>
       <Text color="dimmed" size="sm" align="center" mt={5}>
         Do not have an account yet?{' '}
-        <Link to='/register'>
+        <Link to="/register">
           <Anchor size="sm">Create account</Anchor>
         </Link>
       </Text>
