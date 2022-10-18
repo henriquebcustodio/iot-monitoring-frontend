@@ -18,27 +18,32 @@ export default function App() {
       <MantineProvider withGlobalStyles withNormalizeCSS>
         {!isAuthenticated && (
           <Fragment>
-            <Route path='/auth' component={Login}/>
-            <Route path='/register' component={Register}/>
+            <Route path='/auth' component={Login} />
+            <Route path='/register' component={Register} />
             <Route path='/:rest*'>
-              <Redirect to='/auth'/>
+              <Redirect to='/auth' />
             </Route>
           </Fragment>
         )}
         {isAuthenticated && (
           <AppShell
-            navbar={<Nav/>}
+            sx={{
+              main: {
+                maxHeight: '100vh'
+              }
+            }}
+            navbar={<Nav />}
           >
             <ContentContainer>
               <Switch>
                 <Route path='/devices'>
-                  <Devices/>
+                  <Devices />
                 </Route>
                 <Route path='/devices/:id'>
                   {(params) => (<DeviceDetails id={params.id} />)}
                 </Route>
                 <Route path='/:rest*'>
-                  <Redirect to='/devices'/>
+                  <Redirect to='/devices' />
                 </Route>
               </Switch>
             </ContentContainer>
