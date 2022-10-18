@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { DevicesService } from '../../services';
 
 interface CreateDeviceFormProps {
-  afterCreation(): void;
+  afterCreation(id: number): void;
 }
 
 interface FormValues {
@@ -23,9 +23,9 @@ const CreateDeviceForm = ({ afterCreation }: CreateDeviceFormProps) => {
   const queryClient = useQueryClient();
 
   const { isLoading, mutate: create } = useMutation('createDevice', DevicesService.create, {
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await queryClient.invalidateQueries('listDevices');
-      afterCreation();
+      afterCreation(data.id);
     }
   });
 

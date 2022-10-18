@@ -15,11 +15,19 @@ import DeviceCard from '../../components/DeviceCard';
 import { useState } from 'react';
 import CreateDeviceForm from '../../components/CreateDeviceForm';
 import PageContainer from '../../components/PageContainer';
+import { useLocation } from 'wouter';
 
 const Devices = () => {
   const { data: devices } = useQuery('listDevices', DevicesService.list);
 
+  const [, setLocation] = useLocation();
+
   const [isCreationOpen, setIsCreationOpen] = useState(false);
+
+  const handleAfterCreation = (id: number) => {
+    setIsCreationOpen(false);
+    setLocation(`/devices/${id}`);
+  };
 
   return (
     <PageContainer>
@@ -27,7 +35,7 @@ const Devices = () => {
         title='New device'
         centered={true}
         opened={isCreationOpen} onClose={() => setIsCreationOpen(false)}>
-        <CreateDeviceForm afterCreation={() => setIsCreationOpen(false)}/>
+        <CreateDeviceForm afterCreation={handleAfterCreation} />
       </Modal>
 
       <Group mb='3rem'>
@@ -39,7 +47,7 @@ const Devices = () => {
           color='blue'
           onClick={() => setIsCreationOpen(true)}
         >
-          <IconPlus/>
+          <IconPlus />
         </ActionIcon>
       </Group>
       {devices && devices.length < 1 && (
@@ -47,7 +55,7 @@ const Devices = () => {
           <Stack align='center'>
             <Text align='center'>
               You don`t have any devices yet.
-              <br/>
+              <br />
               Would you like to create a new one?
             </Text>
             <Button onClick={() => setIsCreationOpen(true)}>Create Device</Button>
