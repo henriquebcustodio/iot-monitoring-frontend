@@ -31,7 +31,7 @@ const Devices = () => {
       </Modal>
 
       <Group mb='3rem'>
-        <Title order={2} mb={0}>
+        <Title order={2} mb={0} color='black'>
           Devices
         </Title>
         <ActionIcon
@@ -39,7 +39,7 @@ const Devices = () => {
           color='blue'
           onClick={() => setIsCreationOpen(true)}
         >
-          <IconPlus />
+          <IconPlus/>
         </ActionIcon>
       </Group>
       {devices && devices.length < 1 && (
@@ -67,6 +67,7 @@ const Devices = () => {
             key={index}
             name={device.name}
             description={device.description}
+            id={device.id}
           />
         ))}
       </SimpleGrid>

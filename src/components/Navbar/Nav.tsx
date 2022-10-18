@@ -18,7 +18,6 @@ const Nav = () => {
 
   return (
     <Navbar
-      height='100vh'
       width={{ base: 80 }}
       p='md'
       sx={(theme) => ({

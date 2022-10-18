@@ -8,7 +8,7 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     maxWidth: 'unset',
-    width: '80%',
+    width: '85%',
     height: '100%',
     boxSizing: 'border-box',
     color: theme.colors.gray[7]

@@ -1,14 +1,14 @@
 import { Fragment } from 'react';
 import { QueryClientProvider, QueryClient } from 'react-query';
-import { MantineProvider } from '@mantine/core';
-import { Redirect, Route } from 'wouter';
+import { AppShell, MantineProvider } from '@mantine/core';
+import { Redirect, Route, Switch } from 'wouter';
 import Login from './pages/Login';
 import Register from './pages/Register/Register';
 import Nav from './components/Navbar/Nav';
-import AppContainer from './components/AppContainer';
 import ContentContainer from './components/ContentContainer';
 import Devices from './pages/Devices/Devices';
 import useAuthStore from './store/auth/useAuthStore';
+import DeviceDetails from './pages/DeviceDetails';
 
 export default function App() {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
@@ -16,7 +16,7 @@ export default function App() {
   return (
     <QueryClientProvider client={new QueryClient()}>
       <MantineProvider withGlobalStyles withNormalizeCSS>
-        {!isAuthenticated &&
+        {!isAuthenticated && (
           <Fragment>
             <Route path='/auth' component={Login}/>
             <Route path='/register' component={Register}/>
@@ -24,20 +24,26 @@ export default function App() {
               <Redirect to='/auth'/>
             </Route>
           </Fragment>
-        }
-        {isAuthenticated &&
-          <AppContainer>
-            <Nav/>
+        )}
+        {isAuthenticated && (
+          <AppShell
+            navbar={<Nav/>}
+          >
             <ContentContainer>
-              <Route path='/devices'>
-                <Devices/>
-              </Route>
-              <Route path='/:rest*'>
-                <Redirect to='/devices'/>
-              </Route>
+              <Switch>
+                <Route path='/devices'>
+                  <Devices/>
+                </Route>
+                <Route path='/devices/:id'>
+                  {(params) => (<DeviceDetails id={params.id} />)}
+                </Route>
+                <Route path='/:rest*'>
+                  <Redirect to='/devices'/>
+                </Route>
+              </Switch>
             </ContentContainer>
-          </AppContainer>
-        }
+          </AppShell>
+        )}
       </MantineProvider>
     </QueryClientProvider>
   );

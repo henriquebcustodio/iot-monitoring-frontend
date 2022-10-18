@@ -1,13 +1,15 @@
 import { Card, Text, Button, Group, ThemeIcon, Stack } from '@mantine/core';
 import { IconDeviceLaptop} from '@tabler/icons';
+import { Link } from 'wouter';
 import useStyles from './styles';
 
 interface DeviceCardProps {
   name: string;
   description: string;
+  id: number;
 }
 
-const DeviceCard = ({ name, description }: DeviceCardProps) => {
+const DeviceCard = ({ name, description, id }: DeviceCardProps) => {
   const { classes } = useStyles();
 
   return (
@@ -29,9 +31,17 @@ const DeviceCard = ({ name, description }: DeviceCardProps) => {
             {description || 'No description'}
           </Text>
         </Stack>
-        <Button variant='light' color='blue' fullWidth radius='md'>
-          Open
-        </Button>
+        <Link to={`/devices/${id}`}>
+          <Button
+            variant='light'
+            color='blue'
+            fullWidth
+            radius='md'
+          >
+            Open
+          </Button>
+        </Link>
+
       </Stack>
 
     </Card>
