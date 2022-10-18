@@ -21,7 +21,7 @@ const DeviceInfo = ({ device }: DeviceInfoProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { mutate: deleteDevice } = useMutation(
-    'createDevice',
+    'deleteDevice',
     () => DevicesService.delete(device.id),
     {
       onSuccess: async () => {
