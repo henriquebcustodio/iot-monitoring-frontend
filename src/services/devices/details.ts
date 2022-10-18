@@ -5,7 +5,7 @@ interface ReqResponse {
   device: Device;
 }
 
-const show = async (id: number) => {
+const show = async (id: number | string) => {
   const { data } = await api.get<ReqResponse>(`devices/${id}`);
 
   return data.device;

@@ -8,7 +8,7 @@ import { DevicesService } from '../../services';
 import DeviceInfo from '../../components/DeviceInfo';
 
 interface DeviceDetailsProps {
-  id: number;
+  id: number | string;
 }
 
 const DeviceDetails = ({ id }: DeviceDetailsProps) => {
@@ -30,12 +30,7 @@ const DeviceDetails = ({ id }: DeviceDetailsProps) => {
 
       {device && (
         <Container className={classes.container}>
-          <DeviceInfo
-            name={device.name}
-            description={device.description}
-            topicId={device.topicId}
-            token={device.token}
-          />
+          <DeviceInfo device={device}/>
         </Container>
       )}
     </PageContainer>
