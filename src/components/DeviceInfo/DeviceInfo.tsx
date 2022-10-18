@@ -2,7 +2,7 @@ import { ActionIcon, Divider, Group, Menu, Paper, Stack, Text, Title } from '@ma
 import { IconDotsVertical, IconPencil, IconTrash } from '@tabler/icons';
 import useStyles from './styles';
 import CopyToClipboard from './CopyToClipboard';
-import DeleteModal from './DeleteModal/DeleteModal';
+import DeleteModal from './DeleteModal';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { DevicesService } from '../../services';
