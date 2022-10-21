@@ -3,7 +3,7 @@ interface Variable {
   name: string;
   label: string;
   description: string;
-  variableType: string;
+  variableType: 'numeric' | 'boolean' | 'text';
   deviceId: number;
   createdAt: string;
   updatedAt: string;

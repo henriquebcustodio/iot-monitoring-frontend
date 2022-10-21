@@ -1,9 +1,9 @@
-import { ActionIcon, Divider, Group, Menu, Paper, Stack, Text, Title } from '@mantine/core';
+import { ActionIcon, Divider, Group, Menu, Modal, Paper, Stack, Text, Title } from '@mantine/core';
 import { IconDotsVertical, IconPencil, IconTrash } from '@tabler/icons';
 import useStyles from './styles';
 import CopyToClipboard from './CopyToClipboard';
 import DeleteModal from './DeleteModal';
-import EditModal from './EditModal';
+import EditForm from './EditForm';
 import { useState } from 'react';
 import { Variable } from '../../services/variables';
 import { DataPoint } from '../../services/data-points';
@@ -19,9 +19,6 @@ interface VariableInfoProps {
 const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
   const { classes } = useStyles();
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   const [, setLocation] = useLocation();
 
   const { mutate: deleteVariable } = useMutation(
@@ -33,9 +30,22 @@ const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
       }
     });
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const handleOnDelete = async () => {
     setIsDeleteModalOpen(false);
     await deleteVariable();
+  };
+
+  const formattedLastDataPoint = () => {
+    if (lastDataPoint) {
+      if (variable.variableType === 'numeric') {
+        return Number(lastDataPoint?.value).toFixed(3);
+      }
+      return lastDataPoint?.value;
+    }
+    return '-';
   };
 
   return (
@@ -46,6 +56,18 @@ const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
           onClose={() => setIsDeleteModalOpen(false)}
           onDelete={handleOnDelete}
         />
+
+        <Modal
+          title='Edit variable'
+          centered={true}
+          opened={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+        >
+          <EditForm
+            variable={variable}
+            afterEdition={() => setIsEditModalOpen(false)}
+          />
+        </Modal>
 
         <Group mb='1rem' position='apart' spacing='xs'>
           <Title order={3} weight='500' className={classes.name}>{variable.name}</Title>
@@ -105,10 +127,7 @@ const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
       <Paper withBorder className={classes.lastDataPoint} p='md' radius='md'>
         <Title order={5} weight='500'>Last Data Point</Title>
         <Text mt='1rem'>
-          {variable.variableType === 'numeric' ?
-            Number(lastDataPoint?.value).toFixed(3) :
-            lastDataPoint?.value
-          }
+          {formattedLastDataPoint()}
         </Text>
       </Paper>
     </Stack>
