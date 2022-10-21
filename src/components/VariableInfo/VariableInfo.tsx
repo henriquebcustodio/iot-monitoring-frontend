@@ -7,6 +7,9 @@ import EditModal from './EditModal';
 import { useState } from 'react';
 import { Variable } from '../../services/variables';
 import { DataPoint } from '../../services/data-points';
+import { useMutation } from 'react-query';
+import { VariablesService } from '../../services';
+import { useLocation } from 'wouter';
 
 interface VariableInfoProps {
   variable: Variable;
@@ -16,10 +19,24 @@ interface VariableInfoProps {
 const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
   const { classes } = useStyles();
 
-  console.log(lastDataPoint);
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [, setLocation] = useLocation();
+
+  const { mutate: deleteVariable } = useMutation(
+    'deleteVariable',
+    () => VariablesService.delete(variable.id),
+    {
+      onSuccess: async () => {
+        setLocation(`/devices/${variable.deviceId}`);
+      }
+    });
+
+  const handleOnDelete = async () => {
+    setIsDeleteModalOpen(false);
+    await deleteVariable();
+  };
 
   return (
     <Stack>
@@ -27,7 +44,7 @@ const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
         <DeleteModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
-          onDelete={() => null}
+          onDelete={handleOnDelete}
         />
 
         <Group mb='1rem' position='apart' spacing='xs'>
