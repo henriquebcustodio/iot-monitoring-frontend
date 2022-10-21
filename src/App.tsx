@@ -9,6 +9,7 @@ import ContentContainer from './components/ContentContainer';
 import Devices from './pages/Devices/Devices';
 import useAuthStore from './store/auth/useAuthStore';
 import DeviceDetails from './pages/DeviceDetails';
+import VariableDetails from './pages/VariableDetails';
 
 export default function App() {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
@@ -41,6 +42,9 @@ export default function App() {
                 </Route>
                 <Route path='/devices/:id'>
                   {(params) => (<DeviceDetails id={params.id} />)}
+                </Route>
+                <Route path='/variables/:id'>
+                  {(params) => (<VariableDetails id={params.id} />)}
                 </Route>
                 <Route path='/:rest*'>
                   <Redirect to='/devices' />
