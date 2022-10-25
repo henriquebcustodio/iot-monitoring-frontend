@@ -41,7 +41,7 @@ const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
   const formattedLastDataPoint = () => {
     if (lastDataPoint) {
       if (variable.variableType === 'numeric') {
-        return Number(lastDataPoint?.value).toFixed(3);
+        return Number(lastDataPoint?.value).toFixed(2);
       }
       return lastDataPoint?.value;
     }
