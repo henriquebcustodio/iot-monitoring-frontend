@@ -1,6 +1,6 @@
 import PageContainer from '../../components/PageContainer';
-import { Group, Button, Container, Title } from '@mantine/core';
-import { IconArrowLeft } from '@tabler/icons';
+import { Group, Button, Container, Title, Modal, ActionIcon } from '@mantine/core';
+import { IconArrowLeft, IconTimeline } from '@tabler/icons';
 import { Link } from 'wouter';
 import useStyles from './styles';
 import { useQuery, useQueryClient } from 'react-query';
@@ -9,6 +9,8 @@ import VariableInfo from '../../components/VariableInfo';
 import { useEffect, useState } from 'react';
 import { DataPointsSocket } from '../../services/data-points';
 import DataPointsTable from '../../components/DataPointsTable';
+import LineChart from '../../components/LineChart';
+import { DateTime } from 'luxon';
 
 interface VariableDetailsProps {
   id: number | string;
@@ -20,6 +22,8 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
   const queryClient = useQueryClient();
 
   const [socket,] = useState(new DataPointsSocket(id));
+
+  const [isChartOpen, setIsChartOpen] = useState(false);
 
   const { data: variable } = useQuery('showVariable', () => VariablesService.show(id), {
     cacheTime: 0
@@ -46,6 +50,8 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
 
   return (
     <PageContainer>
+
+
       <Group mb='3rem'>
         <Link to={`/devices/${variable?.deviceId}`}>
           <Button leftIcon={<IconArrowLeft />} variant='light'>
@@ -61,7 +67,30 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
             lastDataPoint={dataPoints[0]}
           />
           <Container className={classes.dataPointsContainer}>
-            <Title order={3} mb='1.5rem'>Data Points</Title>
+            <Group mb='1rem'>
+              <Title order={3}>Data Points</Title>
+              {variable.variableType === 'numeric' && (
+                <ActionIcon
+                  variant='light'
+                  color='blue'
+                  onClick={() => setIsChartOpen(true)}
+                >
+                  <IconTimeline />
+                </ActionIcon>
+              )}
+              <Modal opened={isChartOpen} onClose={() => setIsChartOpen(false)} size='xl' centered>
+                {(dataPoints && variable) && (
+                  <LineChart
+                    title={variable?.name || 'Data Points'}
+                    xData={dataPoints.slice().reverse().map(dataPoint => {
+                      return DateTime.fromISO(dataPoint.timestamp).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
+                    })}
+                    yData={dataPoints.slice().reverse().map(dataPoint => dataPoint.value)}
+                    dataLabel={variable.name}
+                  />
+                )}
+              </Modal>
+            </Group>
             {dataPoints && (
               <DataPointsTable
                 dataPoints={dataPoints}
