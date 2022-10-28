@@ -1,6 +1,6 @@
 import ReactECharts from 'echarts-for-react';
 
-const getOption = (title: string, xData: any[], yData: (0 | 1)[], dataLabel: string) => {
+const getOption = (title: string, xData: any[], yData: any[], dataLabel: string) => {
   const dataset = [];
 
   for (let i = 0; i < xData.length; i++) {
@@ -11,23 +11,22 @@ const getOption = (title: string, xData: any[], yData: (0 | 1)[], dataLabel: str
     tooltip: {
       trigger: 'axis',
     },
-    title: {
-      left: 'center',
-      text: title
+    grid: {
+      left: 20,
+      top: 10,
+      right: 20,
     },
     xAxis: {
       type: 'time',
     },
     yAxis: {
       type: 'value',
-      splitNumber: 1,
-      min: 0,
-      max: 1,
     },
     dataZoom: [
       {
         type: 'slider',
-        filterMode: 'none'
+        filterMode: 'none',
+        showDetail: false
       },
       {
         type: 'inside',
@@ -39,7 +38,6 @@ const getOption = (title: string, xData: any[], yData: (0 | 1)[], dataLabel: str
         type: 'line',
         symbol: 'none',
         animation: false,
-        step: 'start',
         data: dataset
       }
     ]
@@ -53,8 +51,8 @@ interface LineChartProps {
   dataLabel: string;
 }
 
-const BooleanChart = ({ xData, yData, title, dataLabel }: LineChartProps) => {
+const LineChart = ({ xData, yData, title, dataLabel }: LineChartProps) => {
   return (<ReactECharts option={getOption(title, xData, yData, dataLabel)} />);
 };
 
-export default BooleanChart;
+export default LineChart;

@@ -1,5 +1,5 @@
 import PageContainer from '../../components/PageContainer';
-import { Group, Button, Container, Title, Modal, ActionIcon } from '@mantine/core';
+import { Group, Button, Container, Title, Modal, ActionIcon, SegmentedControl, Stack } from '@mantine/core';
 import { IconArrowLeft, IconTimeline } from '@tabler/icons';
 import { Link } from 'wouter';
 import useStyles from './styles';
@@ -9,9 +9,9 @@ import VariableInfo from '../../components/VariableInfo';
 import { useEffect, useState } from 'react';
 import { DataPoint, DataPointsSocket } from '../../services/data-points';
 import DataPointsTable from '../../components/DataPointsTable';
-import LineChart from '../../components/LineChart';
+import LineChart from '../../components/Charts/LineChart';
 import { Variable } from '../../services/variables';
-import BooleanChart from '../../components/BooleanChart';
+import BooleanChart from '../../components/Charts/BooleanChart';
 
 interface VariableDetailsProps {
   id: number | string;
@@ -26,6 +26,8 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
 
   const [isChartOpen, setIsChartOpen] = useState(false);
 
+  const [chartFilter, setChartFilter] = useState('10');
+
   const { data: variable } = useQuery('showVariable', () => VariablesService.show(id), {
     cacheTime: 0
   });
@@ -35,12 +37,20 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
   });
 
   const getChart = (variable: Variable, dataPoints: DataPoint[]) => {
+    let filteredDataPoints: DataPoint[] = [...dataPoints];
+
+    if (chartFilter) {
+      filteredDataPoints = filteredDataPoints.slice(0, Number(chartFilter));
+    }
+
+    filteredDataPoints = filteredDataPoints.reverse();
+
     if (variable?.variableType === 'numeric') {
       return (
         <LineChart
           title={variable.name || 'Data Points'}
-          xData={dataPoints.slice().reverse().map(dataPoint => dataPoint.timestamp)}
-          yData={dataPoints.slice().reverse().map(dataPoint => dataPoint.value)}
+          xData={filteredDataPoints.map(dataPoint => dataPoint.timestamp)}
+          yData={filteredDataPoints.map(dataPoint => dataPoint.value)}
           dataLabel={variable.name}
         />
       );
@@ -50,8 +60,8 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
       return (
         <BooleanChart
           title={variable.name || 'Data Points'}
-          xData={dataPoints.slice().reverse().map(dataPoint => dataPoint.timestamp)}
-          yData={dataPoints.slice().reverse().map(dataPoint => dataPoint.value)}
+          xData={filteredDataPoints.map(dataPoint => dataPoint.timestamp)}
+          yData={filteredDataPoints.map(dataPoint => dataPoint.value)}
           dataLabel={variable.name}
         />
       );
@@ -75,8 +85,6 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
 
   return (
     <PageContainer>
-
-
       <Group mb='3rem'>
         <Link to={`/devices/${variable?.deviceId}`}>
           <Button leftIcon={<IconArrowLeft />} variant='light'>
@@ -103,7 +111,29 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
                   <IconTimeline />
                 </ActionIcon>
               )}
-              <Modal opened={isChartOpen} onClose={() => setIsChartOpen(false)} size='xl' centered>
+              <Modal
+                title={variable.name}
+                opened={isChartOpen} onClose={() => setIsChartOpen(false)}
+                size='xl'
+                centered
+              >
+                <Stack
+                  mb='2rem'
+                >
+                  <SegmentedControl
+                    size='xs'
+                    sx={{maxWidth: '25rem'}}
+                    value={chartFilter}
+                    onChange={setChartFilter}
+                    data={[
+                      { label: 10, value: '10' },
+                      { label: 50, value: '50' },
+                      { label: 100, value: '100' },
+                      { label: 500, value: '500' },
+                      { label: 1000, value: '1000' },
+                      { label: 'All', value: '' },
+                    ]} />
+                </Stack>
                 {(dataPoints && variable) && getChart(variable, dataPoints)}
               </Modal>
             </Group>

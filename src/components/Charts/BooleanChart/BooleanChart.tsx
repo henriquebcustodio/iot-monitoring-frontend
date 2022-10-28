@@ -1,7 +1,13 @@
 import ReactECharts from 'echarts-for-react';
+import { Fragment } from 'react';
 
-const getOption = (title: string, xData: any[], yData: any[], dataLabel: string) => {
-  const dataset = [];
+const getOption = (
+  title: string,
+  xData: any[],
+  yData: any[],
+  dataLabel: string,
+) => {
+  const dataset: [any, any][] = [];
 
   for (let i = 0; i < xData.length; i++) {
     dataset[i] = [xData[i], yData[i]];
@@ -11,15 +17,19 @@ const getOption = (title: string, xData: any[], yData: any[], dataLabel: string)
     tooltip: {
       trigger: 'axis',
     },
-    title: {
-      left: 'center',
-      text: title
-    },
     xAxis: {
       type: 'time',
     },
     yAxis: {
       type: 'value',
+      splitNumber: 1,
+      min: 0,
+      max: 1,
+    },
+    grid: {
+      left: 20,
+      top: 10,
+      right: 20,
     },
     dataZoom: [
       {
@@ -36,6 +46,7 @@ const getOption = (title: string, xData: any[], yData: any[], dataLabel: string)
         type: 'line',
         symbol: 'none',
         animation: false,
+        step: 'end',
         data: dataset
       }
     ]
@@ -49,8 +60,12 @@ interface LineChartProps {
   dataLabel: string;
 }
 
-const LineChart = ({ xData, yData, title, dataLabel }: LineChartProps) => {
-  return (<ReactECharts option={getOption(title, xData, yData, dataLabel)} />);
+const BooleanChart = ({ xData, yData, title, dataLabel }: LineChartProps) => {
+  return (
+    <Fragment>
+      <ReactECharts option={getOption(title, xData, yData, dataLabel)} />
+    </Fragment>
+  );
 };
 
-export default LineChart;
+export default BooleanChart;
