@@ -14,8 +14,6 @@ interface ReqResponse {
 }
 
 const edit = async ({ id, name, description, label, variableType }: ReqInput) => {
-  console.log(variableType);
-
   const { data } = await api.patch<ReqResponse>(`variables/${id}`, {
     variable: {
       name,

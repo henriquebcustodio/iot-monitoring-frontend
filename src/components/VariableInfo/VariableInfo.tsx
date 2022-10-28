@@ -43,7 +43,7 @@ const VariableInfo = ({ variable, lastDataPoint }: VariableInfoProps) => {
       if (variable.variableType === 'numeric') {
         return Number(lastDataPoint?.value).toFixed(2);
       }
-      return lastDataPoint?.value;
+      return String(lastDataPoint?.value);
     }
     return '-';
   };

@@ -20,7 +20,7 @@ const DataPointsTable = ({ dataPoints, isNumeric }: DataPointsTableProps) => {
         {DateTime.fromISO(dataPoint.timestamp).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}
       </td>
       <td>
-        {isNumeric ? Number(dataPoint.value).toFixed(2) : dataPoint.value}
+        {isNumeric ? Number(dataPoint.value).toFixed(2) : String(dataPoint.value)}
       </td>
     </tr>
   ));
