@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import { DataPoint, DataPointsSocket } from '../../services/data-points';
 import DataPointsTable from '../../components/DataPointsTable';
 import LineChart from '../../components/LineChart';
-import { DateTime } from 'luxon';
 import { Variable } from '../../services/variables';
 import BooleanChart from '../../components/BooleanChart';
 
@@ -40,9 +39,7 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
       return (
         <LineChart
           title={variable.name || 'Data Points'}
-          xData={dataPoints.slice().reverse().map(dataPoint => {
-            return DateTime.fromISO(dataPoint.timestamp).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
-          })}
+          xData={dataPoints.slice().reverse().map(dataPoint => dataPoint.timestamp)}
           yData={dataPoints.slice().reverse().map(dataPoint => dataPoint.value)}
           dataLabel={variable.name}
         />
@@ -53,9 +50,7 @@ const VariableDetails = ({ id }: VariableDetailsProps) => {
       return (
         <BooleanChart
           title={variable.name || 'Data Points'}
-          xData={dataPoints.slice().reverse().map(dataPoint => {
-            return dataPoint.timestamp;
-          })}
+          xData={dataPoints.slice().reverse().map(dataPoint => dataPoint.timestamp)}
           yData={dataPoints.slice().reverse().map(dataPoint => dataPoint.value)}
           dataLabel={variable.name}
         />

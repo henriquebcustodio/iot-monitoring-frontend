@@ -1,6 +1,12 @@
 import ReactECharts from 'echarts-for-react';
 
 const getOption = (title: string, xData: any[], yData: any[], dataLabel: string) => {
+  const dataset = [];
+
+  for (let i = 0; i < xData.length; i++) {
+    dataset[i] = [xData[i], yData[i]];
+  }
+
   return {
     tooltip: {
       trigger: 'axis',
@@ -10,8 +16,7 @@ const getOption = (title: string, xData: any[], yData: any[], dataLabel: string)
       text: title
     },
     xAxis: {
-      type: 'category',
-      data: xData
+      type: 'time',
     },
     yAxis: {
       type: 'value',
@@ -19,6 +24,7 @@ const getOption = (title: string, xData: any[], yData: any[], dataLabel: string)
     dataZoom: [
       {
         type: 'slider',
+        filterMode: 'none'
       },
       {
         type: 'inside',
@@ -28,8 +34,9 @@ const getOption = (title: string, xData: any[], yData: any[], dataLabel: string)
       {
         name: dataLabel,
         type: 'line',
+        symbol: 'none',
         animation: false,
-        data: yData,
+        data: dataset
       }
     ]
   };
